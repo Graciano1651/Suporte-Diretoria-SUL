@@ -1,0 +1,342 @@
+<!DOCTYPE html>  
+<html lang="pt-br">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Suporte Diretoria Sul</title>  
+    <link rel="stylesheet" href="style.css">  
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
+    <link rel="preconnect" href="https://fonts.googleapis.com">  
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">  
+</head>  
+<body>  
+    <!-- Modal de Autenticação -->  
+    <div class="modal auth-modal" id="auth-modal">  
+        <div class="modal-content">  
+            <div class="auth-header">  
+                <div class="logo-circle">  
+                    <span class="logo-vivo">VIVO</span>  
+                </div>  
+                <h3><i class="fas fa-lock"></i> Acesso Administrativo</h3>  
+                <p>Digite o PIN para acessar o painel administrativo</p>  
+            </div>  
+              
+            <div class="auth-form">  
+                <div class="form-group">  
+                    <label for="pin-input">PIN de Acesso (4 dígitos):</label>  
+                    <input type="text"   
+                           id="pin-input"   
+                           placeholder="Digite 4 dígitos"   
+                           maxlength="4"  
+                           pattern="\d{4}"  
+                           inputmode="numeric"  
+                           title="Apenas números (0-9)">  
+                </div>  
+                  
+                <div class="auth-message" id="auth-message"></div>  
+                  
+                <div class="auth-buttons">  
+                    <button id="auth-cancel" class="auth-btn secondary">Cancelar</button>  
+                    <button id="auth-submit" class="auth-btn primary">Acessar</button>  
+                </div>  
+            </div>  
+              
+            <div class="auth-footer">  
+                <small><i class="fas fa-shield-alt"></i> Para alterar o PIN, contate o administrador do sistema.</small>  
+            </div>  
+        </div>  
+    </div>  
+  
+    <!-- Modal de Confirmação -->  
+    <div class="modal" id="confirm-modal">  
+        <div class="modal-content">  
+            <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Ação</h3>  
+            <p id="modal-message">Tem certeza que deseja executar esta ação?</p>  
+            <div class="modal-buttons">  
+                <button id="modal-cancel" class="modal-btn">Cancelar</button>  
+                <button id="modal-confirm" class="modal-btn confirm">Confirmar</button>  
+            </div>  
+        </div>  
+    </div>  
+  
+    <!-- Modal de Página (Sobre/Contato) -->  
+    <div class="modal page-modal" id="page-modal">  
+        <div class="modal-content">  
+            <div class="modal-header">  
+                <h3 id="page-title">Título da Página</h3>  
+                <button id="page-close" class="modal-close"><i class="fas fa-times"></i></button>  
+            </div>  
+            <div class="modal-body" id="page-content">  
+                <!-- Conteúdo será carregado aqui -->  
+            </div>  
+        </div>  
+    </div>  
+  
+    <!-- Conteúdo Principal -->  
+    <div class="container">  
+        <header>  
+            <div class="logo-area">  
+                <div class="logo">  
+                    <div class="logo-circle">  
+                        <span class="logo-vivo">VIVO</span>  
+                    </div>  
+                    <div class="logo-text">  
+                        <h1>Suporte Diretoria Sul</h1>  
+                        <p>Engenharia e serviços ao cliente - Rede Externa</p>  
+                    </div>  
+                </div>  
+            </div>  
+              
+            <div class="search-area">  
+                <div class="search-container">  
+                    <i class="fas fa-search"></i>  
+                    <input type="text" id="search-input" placeholder="Buscar links, documentos ou recursos...">  
+                    <button id="search-btn">Buscar</button>  
+                </div>  
+            </div>  
+              
+            <nav class="main-nav">  
+                <ul>  
+                    <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>  
+                    <li><a href="#" class="nav-link" data-page="sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>  
+                    <li><a href="#" class="nav-link" data-page="contato"><i class="fas fa-envelope"></i> Contato</a></li>  
+                    <li><a href="#" class="nav-link" id="admin-btn"><i class="fas fa-cog"></i> Admin</a></li>  
+                </ul>  
+            </nav>  
+        </header>  
+  
+        <!-- Painel Informativo -->  
+        <section class="info-panel">  
+            <div class="info-content">  
+                <div class="info-text active" id="info-text-1">  
+                    <h3>Dezembro</h3>  
+                    <p>O tempo está presente o tempo todo. É apenas a nossa percepção que muda drasticamente quando o medimos entre "o começo e o fim" de um ano.</p>  
+                    <p>A vida, as promessas e as metas não começam ao soar de um relógio à meia-noite, e sim a cada respirar.</p>  
+                    <p class="highlight">O tempo todo é o segundo perfeito para recomeçar.</p>  
+                </div>  
+                <div class="info-text" id="info-text-2">  
+                    <h3>Aniversariantes do Mês</h3>  
+                    <p><strong>Semana 1:</strong> João Silva (02/12), Maria Santos (05/12)</p>  
+                    <p><strong>Semana 2:</strong> Pedro Costa (10/12), Ana Oliveira (12/12)</p>  
+                    <p><strong>Semana 3:</strong> Carlos Mendes (18/12), Fernanda Lima (20/12)</p>  
+                    <p><strong>Semana 4:</strong> Roberto Alves (25/12), Juliana Pereira (28/12)</p>  
+                </div>  
+                <div class="info-text" id="info-text-3">  
+                    <h3>Benefícios VIVO</h3>  
+                    <p>• Plano de saúde completo (Amil)</p>  
+                    <p>• Vale-alimentação/refeição: R$ 800,00</p>  
+                    <p>• PLR (Participação nos Lucros e Resultados)</p>  
+                    <p>• Seguro de vida em grupo</p>  
+                    <p>• Auxílio home office: R$ 150,00</p>  
+                </div>  
+                <div class="info-text" id="info-text-4">  
+                    <h3>Comunicados Importantes</h3>  
+                    <p>• <strong>Reunião Geral:</strong> 15/12 às 14h - Auditório Central</p>  
+                    <p>• <strong>Treinamento Nova Plataforma:</strong> Inscrições abertas até 10/12</p>  
+                    <p>• <strong>Encerramento Anual:</strong> Escritório fechará dia 22/12 às 12h</p>  
+                    <p>• <strong>Retorno:</strong> 02/01 com horário normal</p>  
+                </div>  
+            </div>  
+            <div class="info-nav">  
+                <button id="prev-info"><i class="fas fa-chevron-left"></i></button>  
+                <div class="info-dots">  
+                    <span class="info-dot active" data-info="1"></span>  
+                    <span class="info-dot" data-info="2"></span>  
+                    <span class="info-dot" data-info="3"></span>  
+                    <span class="info-dot" data-info="4"></span>  
+                </div>  
+                <button id="next-info"><i class="fas fa-chevron-right"></i></button>  
+            </div>  
+        </section>  
+  
+        <!-- Cards de Categorias -->  
+        <section class="categories">  
+            <h2>Links Rápidos</h2>  
+            <div class="cards-container">  
+                <div class="card" data-category="b2b">  
+                    <div class="card-icon">  
+                        <i class="fas fa-building"></i>  
+                    </div>  
+                    <h3>B2B</h3>  
+                    <p>Portal Empresarial e Vendas Corporativas</p>  
+                </div>  
+                  
+                <div class="card" data-category="b2c">  
+                    <div class="card-icon">  
+                        <i class="fas fa-users"></i>  
+                    </div>  
+                    <h3>B2C</h3>  
+                    <p>Suporte ao Cliente e Vendas</p>  
+                </div>  
+                  
+                <div class="card" data-category="materiais">  
+                    <div class="card-icon">  
+                        <i class="fas fa-tools"></i>  
+                    </div>  
+                    <h3>Materiais</h3>  
+                    <p>Sistemas e Ferramentas Internas</p>  
+                </div>  
+                  
+                <div class="card" data-category="rh">  
+                    <div class="card-icon">  
+                        <i class="fas fa-user-tie"></i>  
+                    </div>  
+                    <h3>RH Acessos</h3>  
+                    <p>Recursos Humanos e Benefícios</p>  
+                </div>  
+            </div>  
+        </section>  
+  
+        <!-- Container de Links -->  
+        <section class="links-container">  
+            <div class="links-header">  
+                <h3 id="links-title">Selecione uma categoria acima</h3>  
+                <div class="links-count">  
+                    <span id="links-count">0</span> links disponíveis  
+                </div>  
+            </div>  
+            <div class="links-grid" id="links-grid">  
+                <div class="empty-state">  
+                    <i class="fas fa-mouse-pointer"></i>  
+                    <p>Clique em uma das categorias acima para visualizar os links disponíveis</p>  
+                </div>  
+            </div>  
+        </section>  
+  
+        <!-- Área Administrativa -->  
+        <div class="admin-panel" id="admin-panel">  
+            <div class="admin-header">  
+                <h3><i class="fas fa-cog"></i> Painel Administrativo</h3>  
+                <button id="close-admin"><i class="fas fa-times"></i></button>  
+            </div>  
+              
+            <div class="admin-tabs">  
+                <button class="admin-tab active" data-tab="links">Gerenciar Links</button>  
+                <button class="admin-tab" data-tab="info">Gerenciar Informativos</button>  
+            </div>  
+              
+            <div class="admin-content">  
+                <!-- Gerenciamento de Links -->  
+                <div class="admin-section active" id="admin-links">  
+                    <h4>Adicionar Novo Link</h4>  
+                    <div class="admin-form">  
+                        <div class="form-group">  
+                            <label for="link-category">Categoria:</label>  
+                            <select id="link-category">  
+                                <option value="b2b">B2B</option>  
+                                <option value="b2c">B2C</option>  
+                                <option value="materiais">Materiais</option>  
+                                <option value="rh">RH Acessos</option>  
+                            </select>  
+                        </div>  
+                        <div class="form-group">  
+                            <label for="link-name">Nome do Link:</label>  
+                            <input type="text" id="link-name" placeholder="Ex: Portal de Vendas">  
+                        </div>  
+                        <div class="form-group">  
+                            <label for="link-url">URL:</label>  
+                            <input type="text" id="link-url" placeholder="https://...">  
+                        </div>  
+                        <div class="form-group">  
+                            <label for="link-desc">Descrição (opcional):</label>  
+                            <input type="text" id="link-desc" placeholder="Breve descrição do link">  
+                        </div>  
+                        <button id="add-link-btn" class="admin-btn"><i class="fas fa-plus"></i> Adicionar Link</button>  
+                    </div>  
+                      
+                    <div class="links-list-container">  
+                        <h4>Links Existentes</h4>  
+                        <div class="links-list" id="admin-links-list">  
+                            <!-- Lista de links será carregada aqui -->  
+                        </div>  
+                    </div>  
+                </div>  
+                  
+                <!-- Gerenciamento de Informativos -->  
+                <div class="admin-section" id="admin-info">  
+                    <h4>Editar Informativos</h4>  
+                    <div class="admin-form">  
+                        <div class="form-group">  
+                            <label for="info-select">Selecionar Informativo:</label>  
+                            <select id="info-select">  
+                                <option value="1">Mensagem Inspiradora (Painel 1)</option>  
+                                <option value="2">Aniversariantes (Painel 2)</option>  
+                                <option value="3">Benefícios (Painel 3)</option>  
+                                <option value="4">Comunicados (Painel 4)</option>  
+                            </select>  
+                        </div>  
+                          
+                        <!-- Upload de Imagem -->  
+                        <div class="form-group">  
+                            <label for="info-image">Imagem do Informativo (opcional):</label>  
+                            <input type="file" id="info-image" accept="image/*" class="file-input">  
+                            <div class="image-preview-container" id="image-preview-container" style="display: none;">  
+                                <img id="image-preview" class="image-preview" src="#" alt="Preview">  
+                                <button type="button" id="remove-image" class="remove-image-btn"><i class="fas fa-times"></i> Remover</button>  
+                            </div>  
+                        </div>  
+                          
+                        <div class="form-group">  
+                            <label for="info-title">Título:</label>  
+                            <input type="text" id="info-title" placeholder="Título do informativo">  
+                        </div>  
+                        <div class="form-group">  
+                            <label for="info-content">Conteúdo:</label>  
+                            <textarea id="info-content" rows="6" placeholder="Digite o conteúdo do informativo..."></textarea>  
+                        </div>  
+                        <button id="save-info-btn" class="admin-btn"><i class="fas fa-save"></i> Salvar Informativo</button> 
+                        
+                        <!-- Botão Restaurar Painel Atual - COLE APÓS o botão Salvar Informativo -->
+                        <div class="admin-info-actions">
+                        <button id="reset-current-info" class="admin-btn warning">
+                        <i class="fas fa-undo-alt"></i> Restaurar Painel Atual
+                        </button>
+                       </div> 
+                    </div>  
+                </div>  
+            </div>  
+              
+            <div class="admin-footer">  
+                <button id="clear-storage" class="admin-btn danger"><i class="fas fa-trash"></i> Limpar Dados LocalStorage</button>  
+                <div class="admin-message" id="admin-message"></div>  
+            </div>  
+        </div>  
+  
+        <!-- Rodapé -->  
+        <footer>  
+            <div class="footer-content">  
+                <div class="footer-logo">  
+                    <div class="logo-circle small">  
+                        <span class="logo-vivo">VIVO</span>  
+                    </div>  
+                    <div class="footer-text">  
+                        <h4>Diretoria SUL</h4>  
+                        <p>Premissas e documentações da Engenharia de Controle de links e informativos da Telefónica VIVO.</p>  
+                    </div>  
+                </div>  
+                <div class="footer-links">  
+                    <h5>Acesso Rápido</h5>  
+                    <a href="#"><i class="fas fa-external-link-alt"></i> Intranet Corporativa</a>  
+                    <a href="#"><i class="fas fa-external-link-alt"></i> Portal do Colaborador</a>  
+                    <a href="#"><i class="fas fa-external-link-alt"></i> Help Desk TI</a>  
+                </div>  
+                <div class="footer-info">  
+                    <h5>Contato</h5>  
+                    <p><i class="fas fa-phone"></i> (41) 99728-0210</p>  
+                    <p><i class="fas fa-envelope"></i> guilherme.graciano@telefonica.com</p>  
+                    <p><i class="fas fa-map-marker-alt"></i> Diretoria Sul - Curitiba, PR</p>  
+                </div>  
+            </div>  
+            <div class="footer-bottom">  
+                <p>© 2026 VIVO - Telefónica Brasil. Todos os direitos reservados.</p>  
+                <p class="footer-note">Novas premissas, ideias e documentações aparecerão aqui dinamicamente após validação e autorização da gestão.</p>  
+            </div>  
+        </footer>  
+    </div>  
+  
+    <script src="js/storage.js"></script>  
+    <script src="js/ui.js"></script>  
+    <script src="js/app.js"></script>  
+</body>  
+</html>  
