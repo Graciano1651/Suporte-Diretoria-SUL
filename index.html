@@ -1,342 +1,412 @@
-<!DOCTYPE html>  
-<html lang="pt-br">  
-<head>  
-    <meta charset="UTF-8">  
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
-    <title>Suporte Diretoria Sul</title>  
-    <link rel="stylesheet" href="style.css">  
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">  
-    <link rel="preconnect" href="https://fonts.googleapis.com">  
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>  
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">  
-</head>  
-<body>  
-    <!-- Modal de Autenticação -->  
-    <div class="modal auth-modal" id="auth-modal">  
-        <div class="modal-content">  
-            <div class="auth-header">  
-                <div class="logo-circle">  
-                    <span class="logo-vivo">VIVO</span>  
-                </div>  
-                <h3><i class="fas fa-lock"></i> Acesso Administrativo</h3>  
-                <p>Digite o PIN para acessar o painel administrativo</p>  
-            </div>  
-              
-            <div class="auth-form">  
-                <div class="form-group">  
-                    <label for="pin-input">PIN de Acesso (4 dígitos):</label>  
-                    <input type="text"   
-                           id="pin-input"   
-                           placeholder="Digite 4 dígitos"   
-                           maxlength="4"  
-                           pattern="\d{4}"  
-                           inputmode="numeric"  
-                           title="Apenas números (0-9)">  
-                </div>  
-                  
-                <div class="auth-message" id="auth-message"></div>  
-                  
-                <div class="auth-buttons">  
-                    <button id="auth-cancel" class="auth-btn secondary">Cancelar</button>  
-                    <button id="auth-submit" class="auth-btn primary">Acessar</button>  
-                </div>  
-            </div>  
-              
-            <div class="auth-footer">  
-                <small><i class="fas fa-shield-alt"></i> Para alterar o PIN, contate o administrador do sistema.</small>  
-            </div>  
-        </div>  
-    </div>  
-  
-    <!-- Modal de Confirmação -->  
-    <div class="modal" id="confirm-modal">  
-        <div class="modal-content">  
-            <h3><i class="fas fa-exclamation-triangle"></i> Confirmar Ação</h3>  
-            <p id="modal-message">Tem certeza que deseja executar esta ação?</p>  
-            <div class="modal-buttons">  
-                <button id="modal-cancel" class="modal-btn">Cancelar</button>  
-                <button id="modal-confirm" class="modal-btn confirm">Confirmar</button>  
-            </div>  
-        </div>  
-    </div>  
-  
-    <!-- Modal de Página (Sobre/Contato) -->  
-    <div class="modal page-modal" id="page-modal">  
-        <div class="modal-content">  
-            <div class="modal-header">  
-                <h3 id="page-title">Título da Página</h3>  
-                <button id="page-close" class="modal-close"><i class="fas fa-times"></i></button>  
-            </div>  
-            <div class="modal-body" id="page-content">  
-                <!-- Conteúdo será carregado aqui -->  
-            </div>  
-        </div>  
-    </div>  
-  
-    <!-- Conteúdo Principal -->  
-    <div class="container">  
-        <header>  
-            <div class="logo-area">  
-                <div class="logo">  
-                    <div class="logo-circle">  
-                        <span class="logo-vivo">VIVO</span>  
-                    </div>  
-                    <div class="logo-text">  
-                        <h1>Suporte Diretoria Sul</h1>  
-                        <p>Engenharia e serviços ao cliente - Rede Externa</p>  
-                    </div>  
-                </div>  
-            </div>  
-              
-            <div class="search-area">  
-                <div class="search-container">  
-                    <i class="fas fa-search"></i>  
-                    <input type="text" id="search-input" placeholder="Buscar links, documentos ou recursos...">  
-                    <button id="search-btn">Buscar</button>  
-                </div>  
-            </div>  
-              
-            <nav class="main-nav">  
-                <ul>  
-                    <li><a href="#" class="nav-link active" data-page="home"><i class="fas fa-home"></i> Home</a></li>  
-                    <li><a href="#" class="nav-link" data-page="sobre"><i class="fas fa-info-circle"></i> Sobre</a></li>  
-                    <li><a href="#" class="nav-link" data-page="contato"><i class="fas fa-envelope"></i> Contato</a></li>  
-                    <li><a href="#" class="nav-link" id="admin-btn"><i class="fas fa-cog"></i> Admin</a></li>  
-                </ul>  
-            </nav>  
-        </header>  
-  
-        <!-- Painel Informativo -->  
-        <section class="info-panel">  
-            <div class="info-content">  
-                <div class="info-text active" id="info-text-1">  
-                    <h3>Dezembro</h3>  
-                    <p>O tempo está presente o tempo todo. É apenas a nossa percepção que muda drasticamente quando o medimos entre "o começo e o fim" de um ano.</p>  
-                    <p>A vida, as promessas e as metas não começam ao soar de um relógio à meia-noite, e sim a cada respirar.</p>  
-                    <p class="highlight">O tempo todo é o segundo perfeito para recomeçar.</p>  
-                </div>  
-                <div class="info-text" id="info-text-2">  
-                    <h3>Aniversariantes do Mês</h3>  
-                    <p><strong>Semana 1:</strong> João Silva (02/12), Maria Santos (05/12)</p>  
-                    <p><strong>Semana 2:</strong> Pedro Costa (10/12), Ana Oliveira (12/12)</p>  
-                    <p><strong>Semana 3:</strong> Carlos Mendes (18/12), Fernanda Lima (20/12)</p>  
-                    <p><strong>Semana 4:</strong> Roberto Alves (25/12), Juliana Pereira (28/12)</p>  
-                </div>  
-                <div class="info-text" id="info-text-3">  
-                    <h3>Benefícios VIVO</h3>  
-                    <p>• Plano de saúde completo (Amil)</p>  
-                    <p>• Vale-alimentação/refeição: R$ 800,00</p>  
-                    <p>• PLR (Participação nos Lucros e Resultados)</p>  
-                    <p>• Seguro de vida em grupo</p>  
-                    <p>• Auxílio home office: R$ 150,00</p>  
-                </div>  
-                <div class="info-text" id="info-text-4">  
-                    <h3>Comunicados Importantes</h3>  
-                    <p>• <strong>Reunião Geral:</strong> 15/12 às 14h - Auditório Central</p>  
-                    <p>• <strong>Treinamento Nova Plataforma:</strong> Inscrições abertas até 10/12</p>  
-                    <p>• <strong>Encerramento Anual:</strong> Escritório fechará dia 22/12 às 12h</p>  
-                    <p>• <strong>Retorno:</strong> 02/01 com horário normal</p>  
-                </div>  
-            </div>  
-            <div class="info-nav">  
-                <button id="prev-info"><i class="fas fa-chevron-left"></i></button>  
-                <div class="info-dots">  
-                    <span class="info-dot active" data-info="1"></span>  
-                    <span class="info-dot" data-info="2"></span>  
-                    <span class="info-dot" data-info="3"></span>  
-                    <span class="info-dot" data-info="4"></span>  
-                </div>  
-                <button id="next-info"><i class="fas fa-chevron-right"></i></button>  
-            </div>  
-        </section>  
-  
-        <!-- Cards de Categorias -->  
-        <section class="categories">  
-            <h2>Links Rápidos</h2>  
-            <div class="cards-container">  
-                <div class="card" data-category="b2b">  
-                    <div class="card-icon">  
-                        <i class="fas fa-building"></i>  
-                    </div>  
-                    <h3>B2B</h3>  
-                    <p>Portal Empresarial e Vendas Corporativas</p>  
-                </div>  
-                  
-                <div class="card" data-category="b2c">  
-                    <div class="card-icon">  
-                        <i class="fas fa-users"></i>  
-                    </div>  
-                    <h3>B2C</h3>  
-                    <p>Suporte ao Cliente e Vendas</p>  
-                </div>  
-                  
-                <div class="card" data-category="materiais">  
-                    <div class="card-icon">  
-                        <i class="fas fa-tools"></i>  
-                    </div>  
-                    <h3>Materiais</h3>  
-                    <p>Sistemas e Ferramentas Internas</p>  
-                </div>  
-                  
-                <div class="card" data-category="rh">  
-                    <div class="card-icon">  
-                        <i class="fas fa-user-tie"></i>  
-                    </div>  
-                    <h3>RH Acessos</h3>  
-                    <p>Recursos Humanos e Benefícios</p>  
-                </div>  
-            </div>  
-        </section>  
-  
-        <!-- Container de Links -->  
-        <section class="links-container">  
-            <div class="links-header">  
-                <h3 id="links-title">Selecione uma categoria acima</h3>  
-                <div class="links-count">  
-                    <span id="links-count">0</span> links disponíveis  
-                </div>  
-            </div>  
-            <div class="links-grid" id="links-grid">  
-                <div class="empty-state">  
-                    <i class="fas fa-mouse-pointer"></i>  
-                    <p>Clique em uma das categorias acima para visualizar os links disponíveis</p>  
-                </div>  
-            </div>  
-        </section>  
-  
-        <!-- Área Administrativa -->  
-        <div class="admin-panel" id="admin-panel">  
-            <div class="admin-header">  
-                <h3><i class="fas fa-cog"></i> Painel Administrativo</h3>  
-                <button id="close-admin"><i class="fas fa-times"></i></button>  
-            </div>  
-              
-            <div class="admin-tabs">  
-                <button class="admin-tab active" data-tab="links">Gerenciar Links</button>  
-                <button class="admin-tab" data-tab="info">Gerenciar Informativos</button>  
-            </div>  
-              
-            <div class="admin-content">  
-                <!-- Gerenciamento de Links -->  
-                <div class="admin-section active" id="admin-links">  
-                    <h4>Adicionar Novo Link</h4>  
-                    <div class="admin-form">  
-                        <div class="form-group">  
-                            <label for="link-category">Categoria:</label>  
-                            <select id="link-category">  
-                                <option value="b2b">B2B</option>  
-                                <option value="b2c">B2C</option>  
-                                <option value="materiais">Materiais</option>  
-                                <option value="rh">RH Acessos</option>  
-                            </select>  
-                        </div>  
-                        <div class="form-group">  
-                            <label for="link-name">Nome do Link:</label>  
-                            <input type="text" id="link-name" placeholder="Ex: Portal de Vendas">  
-                        </div>  
-                        <div class="form-group">  
-                            <label for="link-url">URL:</label>  
-                            <input type="text" id="link-url" placeholder="https://...">  
-                        </div>  
-                        <div class="form-group">  
-                            <label for="link-desc">Descrição (opcional):</label>  
-                            <input type="text" id="link-desc" placeholder="Breve descrição do link">  
-                        </div>  
-                        <button id="add-link-btn" class="admin-btn"><i class="fas fa-plus"></i> Adicionar Link</button>  
-                    </div>  
-                      
-                    <div class="links-list-container">  
-                        <h4>Links Existentes</h4>  
-                        <div class="links-list" id="admin-links-list">  
-                            <!-- Lista de links será carregada aqui -->  
-                        </div>  
-                    </div>  
-                </div>  
-                  
-                <!-- Gerenciamento de Informativos -->  
-                <div class="admin-section" id="admin-info">  
-                    <h4>Editar Informativos</h4>  
-                    <div class="admin-form">  
-                        <div class="form-group">  
-                            <label for="info-select">Selecionar Informativo:</label>  
-                            <select id="info-select">  
-                                <option value="1">Mensagem Inspiradora (Painel 1)</option>  
-                                <option value="2">Aniversariantes (Painel 2)</option>  
-                                <option value="3">Benefícios (Painel 3)</option>  
-                                <option value="4">Comunicados (Painel 4)</option>  
-                            </select>  
-                        </div>  
-                          
-                        <!-- Upload de Imagem -->  
-                        <div class="form-group">  
-                            <label for="info-image">Imagem do Informativo (opcional):</label>  
-                            <input type="file" id="info-image" accept="image/*" class="file-input">  
-                            <div class="image-preview-container" id="image-preview-container" style="display: none;">  
-                                <img id="image-preview" class="image-preview" src="#" alt="Preview">  
-                                <button type="button" id="remove-image" class="remove-image-btn"><i class="fas fa-times"></i> Remover</button>  
-                            </div>  
-                        </div>  
-                          
-                        <div class="form-group">  
-                            <label for="info-title">Título:</label>  
-                            <input type="text" id="info-title" placeholder="Título do informativo">  
-                        </div>  
-                        <div class="form-group">  
-                            <label for="info-content">Conteúdo:</label>  
-                            <textarea id="info-content" rows="6" placeholder="Digite o conteúdo do informativo..."></textarea>  
-                        </div>  
-                        <button id="save-info-btn" class="admin-btn"><i class="fas fa-save"></i> Salvar Informativo</button> 
-                        
-                        <!-- Botão Restaurar Painel Atual - COLE APÓS o botão Salvar Informativo -->
-                        <div class="admin-info-actions">
-                        <button id="reset-current-info" class="admin-btn warning">
-                        <i class="fas fa-undo-alt"></i> Restaurar Painel Atual
-                        </button>
-                       </div> 
-                    </div>  
-                </div>  
-            </div>  
-              
-            <div class="admin-footer">  
-                <button id="clear-storage" class="admin-btn danger"><i class="fas fa-trash"></i> Limpar Dados LocalStorage</button>  
-                <div class="admin-message" id="admin-message"></div>  
-            </div>  
-        </div>  
-  
-        <!-- Rodapé -->  
-        <footer>  
-            <div class="footer-content">  
-                <div class="footer-logo">  
-                    <div class="logo-circle small">  
-                        <span class="logo-vivo">VIVO</span>  
-                    </div>  
-                    <div class="footer-text">  
-                        <h4>Diretoria SUL</h4>  
-                        <p>Premissas e documentações da Engenharia de Controle de links e informativos da Telefónica VIVO.</p>  
-                    </div>  
-                </div>  
-                <div class="footer-links">  
-                    <h5>Acesso Rápido</h5>  
-                    <a href="#"><i class="fas fa-external-link-alt"></i> Intranet Corporativa</a>  
-                    <a href="#"><i class="fas fa-external-link-alt"></i> Portal do Colaborador</a>  
-                    <a href="#"><i class="fas fa-external-link-alt"></i> Help Desk TI</a>  
-                </div>  
-                <div class="footer-info">  
-                    <h5>Contato</h5>  
-                    <p><i class="fas fa-phone"></i> (41) 99728-0210</p>  
-                    <p><i class="fas fa-envelope"></i> guilherme.graciano@telefonica.com</p>  
-                    <p><i class="fas fa-map-marker-alt"></i> Diretoria Sul - Curitiba, PR</p>  
-                </div>  
-            </div>  
-            <div class="footer-bottom">  
-                <p>© 2026 VIVO - Telefónica Brasil. Todos os direitos reservados.</p>  
-                <p class="footer-note">Novas premissas, ideias e documentações aparecerão aqui dinamicamente após validação e autorização da gestão.</p>  
-            </div>  
-        </footer>  
-    </div>  
-  
-    <script src="js/storage.js"></script>  
-    <script src="js/ui.js"></script>  
-    <script src="js/app.js"></script>  
-</body>  
-</html>  
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Suporte Diretoria Sul</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════ FUNDO SVG ═══════════════ -->
+  <svg class="bg-scene" xmlns="http://www.w3.org/2000/svg"
+       viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+    <defs>
+      <linearGradient id="greenBg" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%"  stop-color="#bcdac6"/>
+        <stop offset="55%" stop-color="#adcfb9"/>
+        <stop offset="100%" stop-color="#a0c7ae"/>
+      </linearGradient>
+      <clipPath id="greenClip">
+        <path d="M 0 0 L 1440 0 L 1440 520 Q 720 680 0 520 Z"/>
+      </clipPath>
+    </defs>
+    <rect width="1440" height="900" fill="#f0f5f1"/>
+    <g clip-path="url(#greenClip)">
+      <rect width="1440" height="900" fill="url(#greenBg)"/>
+      <ellipse cx="300" cy="-30" rx="500" ry="200" fill="#d2f0dc" fill-opacity="0.28"/>
+      <ellipse cx="200" cy="100" rx="400" ry="150" fill="#c8ebd2" fill-opacity="0.15"/>
+      <g fill="none">
+        <ellipse cx="500" cy="120" rx="620" ry="130" fill="#c8e0d0" fill-opacity="0.10"/>
+        <ellipse cx="550" cy="280" rx="680" ry="160" fill="#b8d8c4" fill-opacity="0.09"/>
+        <ellipse cx="500" cy="440" rx="720" ry="180" fill="#c0dcc8" fill-opacity="0.11"/>
+        <ellipse cx="450" cy="600" rx="700" ry="170" fill="#b4d4be" fill-opacity="0.09"/>
+        <ellipse cx="400" cy="760" rx="660" ry="150" fill="#acccb4" fill-opacity="0.08"/>
+        <path d="M -80 85 C 100 70, 280 65, 460 75 C 640 85, 820 100, 1000 105 C 1180 110, 1360 100, 1490 92" stroke="#1e5a34" stroke-opacity="0.18" stroke-width="1.4" fill="none"/>
+        <path d="M -70 140 C 110 122, 290 115, 470 127 C 650 139, 830 157, 1010 162 C 1190 167, 1370 155, 1490 147" stroke="#1e5a34" stroke-opacity="0.17" stroke-width="1.3" fill="none"/>
+        <path d="M -60 195 C 120 174, 300 165, 480 179 C 660 193, 840 214, 1020 219 C 1200 224, 1380 210, 1490 202" stroke="#1e5a34" stroke-opacity="0.16" stroke-width="1.3" fill="none"/>
+        <path d="M -90 250 C 90 226, 270 215, 450 232 C 630 249, 810 273, 990 279 C 1170 285, 1350 270, 1490 261" stroke="#287a46" stroke-opacity="0.20" stroke-width="1.3" fill="none"/>
+        <path d="M -80 305 C 100 278, 280 266, 460 284 C 640 302, 820 328, 1000 334 C 1180 340, 1360 325, 1490 316" stroke="#287a46" stroke-opacity="0.19" stroke-width="1.2" fill="none"/>
+        <path d="M -70 360 C 110 330, 290 317, 470 336 C 650 355, 830 383, 1010 389 C 1190 395, 1370 380, 1490 371" stroke="#287a46" stroke-opacity="0.18" stroke-width="1.2" fill="none"/>
+        <path d="M -60 415 C 120 382, 300 368, 480 388 C 660 408, 840 438, 1020 444 C 1200 450, 1380 435, 1490 426" stroke="#287a46" stroke-opacity="0.17" stroke-width="1.1" fill="none"/>
+        <path d="M -100 480 C 80 444, 260 428, 440 451 C 620 474, 800 506, 980 513 C 1160 520, 1340 504, 1490 495" stroke="#9ccfae" stroke-opacity="0.28" stroke-width="1.2" fill="none"/>
+        <path d="M -90 540 C 90 501, 270 484, 450 508 C 630 532, 810 567, 990 574 C 1170 581, 1350 565, 1490 556" stroke="#9ccfae" stroke-opacity="0.27" stroke-width="1.1" fill="none"/>
+        <path d="M -80 600 C 100 558, 280 540, 460 565 C 640 590, 820 628, 1000 635 C 1180 642, 1360 626, 1490 617" stroke="#9ccfae" stroke-opacity="0.26" stroke-width="1.1" fill="none"/>
+        <path d="M -70 660 C 110 615, 290 596, 470 622 C 650 648, 830 689, 1010 696 C 1190 703, 1370 687, 1490 678" stroke="#9ccfae" stroke-opacity="0.25" stroke-width="1.0" fill="none"/>
+        <path d="M -30 180 C 100 165, 230 158, 360 172 C 490 186, 620 218, 750 230 C 880 242, 1010 240, 1140 230 C 1270 220, 1360 205, 1490 198" stroke="#2e8750" stroke-opacity="0.22" stroke-width="1.1" fill="none"/>
+        <path d="M -20 260 C 110 242, 240 234, 370 249 C 500 264, 630 299, 760 312 C 890 325, 1020 322, 1150 311 C 1280 300, 1370 284, 1490 277" stroke="#2e8750" stroke-opacity="0.21" stroke-width="1.1" fill="none"/>
+        <path d="M -10 340 C 120 319, 250 310, 380 326 C 510 342, 640 380, 770 394 C 900 408, 1030 404, 1160 392 C 1290 380, 1380 363, 1490 356" stroke="#2e8750" stroke-opacity="0.20" stroke-width="1.0" fill="none"/>
+        <path d="M 0 420 C 130 396, 260 386, 390 403 C 520 420, 650 461, 780 476 C 910 491, 1040 486, 1170 473 C 1300 460, 1390 442, 1490 435" stroke="#2e8750" stroke-opacity="0.19" stroke-width="1.0" fill="none"/>
+        <path d="M 220 205 C 320 198, 420 202, 520 218 C 620 234, 720 260, 820 272 C 920 284, 1020 282, 1120 272 C 1220 262, 1320 245, 1490 235" stroke="#a8ddbb" stroke-opacity="0.25" stroke-width="1.0" fill="none"/>
+        <path d="M 280 290 C 380 281, 480 285, 580 303 C 680 321, 780 350, 880 363 C 980 376, 1080 374, 1180 363 C 1280 352, 1380 334, 1490 324" stroke="#a8ddbb" stroke-opacity="0.24" stroke-width="0.95" fill="none"/>
+        <path d="M 340 375 C 440 364, 540 368, 640 388 C 740 408, 840 440, 940 454 C 1040 468, 1140 466, 1240 454 C 1340 442, 1440 423, 1490 413" stroke="#a8ddbb" stroke-opacity="0.23" stroke-width="0.95" fill="none"/>
+        <path d="M -50 520 C 100 490, 250 478, 400 496 C 550 514, 700 545, 850 559 C 1000 573, 1150 570, 1300 557 C 1400 548, 1450 537, 1490 532" stroke="#e2f2e8" stroke-opacity="0.32" stroke-width="1.0" fill="none"/>
+        <path d="M -40 600 C 110 567, 260 554, 410 573 C 560 592, 710 626, 860 641 C 1010 656, 1160 652, 1310 638 C 1410 629, 1460 617, 1490 612" stroke="#e2f2e8" stroke-opacity="0.31" stroke-width="0.95" fill="none"/>
+        <path d="M -30 680 C 120 644, 270 630, 420 650 C 570 670, 720 707, 870 723 C 1020 739, 1170 734, 1320 719 C 1420 710, 1470 697, 1490 692" stroke="#e2f2e8" stroke-opacity="0.30" stroke-width="0.95" fill="none"/>
+        <path d="M 400 140 C 550 128, 700 130, 850 148 C 1000 166, 1150 188, 1300 198 C 1400 204, 1450 202, 1490 200" stroke="#b8e2ca" stroke-opacity="0.26" stroke-width="1.0" fill="none"/>
+        <path d="M 450 290 C 600 276, 750 278, 900 298 C 1050 318, 1200 342, 1350 353 C 1420 358, 1460 356, 1490 354" stroke="#b8e2ca" stroke-opacity="0.25" stroke-width="0.95" fill="none"/>
+        <path d="M 500 440 C 650 424, 800 426, 950 448 C 1100 470, 1250 496, 1400 508 C 1450 512, 1475 510, 1490 508" stroke="#b8e2ca" stroke-opacity="0.24" stroke-width="0.9" fill="none"/>
+        <path d="M 550 590 C 700 572, 850 574, 1000 598 C 1150 622, 1300 650, 1450 663 C 1480 666, 1490 665, 1490 664" stroke="#b8e2ca" stroke-opacity="0.23" stroke-width="0.9" fill="none"/>
+        <path d="M 100 100 C 250 88, 400 92, 550 112 C 700 132, 850 162, 1000 172 C 1150 182, 1300 178, 1450 165 C 1480 162, 1490 160, 1490 159" stroke="#d0ecd9" stroke-opacity="0.27" stroke-width="0.9" fill="none"/>
+        <path d="M 150 380 C 300 362, 450 366, 600 388 C 750 410, 900 442, 1050 453 C 1200 464, 1350 458, 1490 445" stroke="#d0ecd9" stroke-opacity="0.26" stroke-width="0.85" fill="none"/>
+        <path d="M 200 660 C 350 638, 500 642, 650 666 C 800 690, 950 724, 1100 736 C 1250 748, 1400 740, 1490 727" stroke="#d0ecd9" stroke-opacity="0.25" stroke-width="0.85" fill="none"/>
+        <path d="M -60 45 C 100 34, 260 32, 420 42 C 580 52, 740 66, 900 70 C 1060 74, 1220 70, 1380 60 C 1440 56, 1470 53, 1490 52" stroke="#ecf9f0" stroke-opacity="0.34" stroke-width="0.8" fill="none"/>
+        <path d="M -50 780 C 110 762, 270 758, 430 770 C 590 782, 750 800, 910 804 C 1070 808, 1230 800, 1390 788 C 1450 782, 1475 778, 1490 776" stroke="#ecf9f0" stroke-opacity="0.33" stroke-width="0.75" fill="none"/>
+      </g>
+      <g fill="#8bcba0" fill-opacity="0.42">
+        <circle cx="120" cy="55"  r="3.2"/><circle cx="320" cy="68"  r="3.5"/><circle cx="520" cy="75"  r="3.2"/><circle cx="720" cy="75"  r="2.8"/><circle cx="920" cy="68"  r="2.6"/>
+        <circle cx="150" cy="185" r="2.8"/><circle cx="350" cy="198" r="3.5"/><circle cx="550" cy="205" r="3.2"/><circle cx="750" cy="205" r="2.8"/><circle cx="950" cy="198" r="2.6"/>
+        <circle cx="180" cy="315" r="3.2"/><circle cx="380" cy="328" r="3.0"/><circle cx="580" cy="335" r="2.6"/><circle cx="780" cy="335" r="3.2"/><circle cx="980" cy="328" r="2.8"/>
+        <circle cx="210" cy="445" r="2.8"/><circle cx="410" cy="458" r="3.5"/><circle cx="610" cy="465" r="3.2"/><circle cx="810" cy="465" r="2.8"/><circle cx="1010" cy="458" r="2.6"/>
+        <circle cx="240" cy="575" r="3.2"/><circle cx="440" cy="588" r="3.0"/><circle cx="640" cy="595" r="2.6"/><circle cx="840" cy="595" r="3.2"/><circle cx="1040" cy="588" r="2.4"/>
+        <circle cx="270" cy="705" r="2.8"/><circle cx="470" cy="718" r="3.5"/><circle cx="670" cy="725" r="3.2"/><circle cx="870" cy="725" r="2.8"/><circle cx="970" cy="722" r="3.2"/>
+      </g>
+      <!-- Rede neural direita -->
+      <g fill="none" stroke="#1e5537" stroke-opacity="0.19" stroke-width="0.9">
+        <line x1="1060" y1="55"  x2="1140" y2="105"/><line x1="1140" y1="105" x2="1220" y2="62"/>
+        <line x1="1220" y1="62"  x2="1285" y2="118"/><line x1="1285" y1="118" x2="1355" y2="78"/>
+        <line x1="1355" y1="78"  x2="1410" y2="130"/><line x1="1140" y1="105" x2="1185" y2="178"/>
+        <line x1="1185" y1="178" x2="1260" y2="195"/><line x1="1260" y1="195" x2="1285" y2="118"/>
+        <line x1="1260" y1="195" x2="1330" y2="240"/><line x1="1330" y1="240" x2="1355" y2="78"/>
+        <line x1="1330" y1="240" x2="1390" y2="210"/><line x1="1390" y1="210" x2="1410" y2="130"/>
+        <line x1="1060" y1="55"  x2="1100" y2="140"/><line x1="1100" y1="140" x2="1185" y2="178"/>
+        <line x1="1100" y1="140" x2="1060" y2="200"/><line x1="1060" y1="200" x2="1140" y2="260"/>
+        <line x1="1140" y1="260" x2="1185" y2="178"/><line x1="1140" y1="260" x2="1185" y2="320"/>
+        <line x1="1185" y1="320" x2="1260" y2="195"/><line x1="1185" y1="320" x2="1260" y2="340"/>
+        <line x1="1260" y1="340" x2="1330" y2="240"/><line x1="1260" y1="340" x2="1320" y2="390"/>
+        <line x1="1320" y1="390" x2="1390" y2="210"/><line x1="990"  y1="90"  x2="1060" y2="55"/>
+        <line x1="990"  y1="90"  x2="1100" y2="140"/><line x1="990"  y1="90"  x2="960"  y2="180"/>
+        <line x1="960"  y1="180" x2="1060" y2="200"/><line x1="960"  y1="180" x2="920"  y2="280"/>
+        <line x1="920"  y1="280" x2="1060" y2="200"/><line x1="920"  y1="280" x2="1000" y2="340"/>
+        <line x1="1000" y1="340" x2="1140" y2="260"/><line x1="1000" y1="340" x2="1060" y2="420"/>
+        <line x1="1060" y1="420" x2="1185" y2="320"/><line x1="1060" y1="420" x2="1140" y2="480"/>
+        <line x1="1140" y1="480" x2="1260" y2="340"/><line x1="1390" y1="210" x2="1440" y2="260"/>
+        <line x1="1320" y1="390" x2="1440" y2="380"/><line x1="1320" y1="390" x2="1260" y2="460"/>
+        <line x1="1260" y1="460" x2="1140" y2="480"/><line x1="1260" y1="460" x2="1320" y2="520"/>
+        <line x1="1320" y1="520" x2="1440" y2="480"/>
+      </g>
+      <g fill="#235f3a" fill-opacity="0.45">
+        <circle cx="1060" cy="55"  r="4.2"/><circle cx="1140" cy="105" r="5.0"/><circle cx="1220" cy="62"  r="3.8"/>
+        <circle cx="1285" cy="118" r="4.5"/><circle cx="1355" cy="78"  r="4.0"/><circle cx="1410" cy="130" r="3.5"/>
+        <circle cx="1185" cy="178" r="4.5"/><circle cx="1260" cy="195" r="4.2"/><circle cx="1330" cy="240" r="4.8"/>
+        <circle cx="1390" cy="210" r="3.8"/><circle cx="1100" cy="140" r="4.0"/><circle cx="1060" cy="200" r="4.2"/>
+        <circle cx="1140" cy="260" r="4.5"/><circle cx="1185" cy="320" r="4.0"/><circle cx="1260" cy="340" r="4.5"/>
+        <circle cx="1320" cy="390" r="4.8"/><circle cx="990"  cy="90"  r="4.0"/><circle cx="960"  cy="180" r="3.8"/>
+        <circle cx="920"  cy="280" r="4.2"/><circle cx="1000" cy="340" r="4.0"/><circle cx="1060" cy="420" r="4.5"/>
+        <circle cx="1140" cy="480" r="4.2"/><circle cx="1260" cy="460" r="4.0"/><circle cx="1320" cy="520" r="3.8"/>
+      </g>
+      <g fill="#235f3a" fill-opacity="0.28">
+        <circle cx="1310" cy="55"  r="3.0"/><circle cx="1380" cy="155" r="2.5"/><circle cx="1430" cy="85"  r="3.0"/>
+        <circle cx="880"  cy="160" r="2.5"/><circle cx="850"  cy="330" r="3.0"/><circle cx="900"  cy="420" r="2.5"/>
+        <circle cx="1080" cy="490" r="3.0"/><circle cx="1200" cy="540" r="2.5"/><circle cx="1360" cy="460" r="3.0"/>
+        <circle cx="1010" cy="60"  r="2.2"/><circle cx="1150" cy="80"  r="2.2"/><circle cx="1240" cy="150" r="2.5"/>
+        <circle cx="1170" cy="230" r="2.2"/><circle cx="1090" cy="300" r="2.5"/><circle cx="1220" cy="280" r="2.2"/>
+        <circle cx="1340" cy="310" r="2.5"/><circle cx="1270" cy="420" r="2.2"/>
+      </g>
+    </g>
+    <path d="M 0 520 Q 720 680 1440 520 L 1440 540 Q 720 700 0 540 Z" fill="#509464" fill-opacity="0.08"/>
+  </svg>
+
+  <!-- ═══════════════ PÁGINA ═══════════════ -->
+  <div class="page-wrap">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="site-header">
+      <a href="#" class="logo-container">
+  <div class="logo-real">
+    <img src="img/logo.png" alt="Logo Suporte Diretoria Sul">
+  </div>
+
+  <div class="brand-text">
+    <span class="suporte">SUPORTE</span>
+    <span class="diretoria">DIRETORIA SUL</span>
+  </div>
+</a>
+
+
+      <nav aria-label="Navegação principal">
+        <ul>
+          <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
+          <li><a href="#" class="nav-link" data-page="sobre">Sobre</a></li>
+          <li><a href="#" class="nav-link" data-page="contato">Contato</a></li>
+          <li><a href="#" class="nav-link" id="admin-btn" data-page="admin">Admin</a></li>
+        </ul>
+      </nav>
+
+      <div class="right-zone">
+        <div class="search-component" role="search">
+          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
+          <input type="text" id="search-input" placeholder="Buscar links..." aria-label="Buscar" />
+          <button type="button" id="search-btn">Buscar</button>
+        </div>
+        <div class="icon-set">
+          <button type="button" aria-label="Perfil">
+            <i class="fa-solid fa-user"></i>
+          </button>
+          <button type="button" aria-label="Configurações">
+            <i class="fa-solid fa-gear"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ═══════════════ CONTEÚDO PRINCIPAL ═══════════════ -->
+    <main class="main-content">
+
+      <!-- CARDS DE CATEGORIA -->
+      <section class="cards-section">
+        <div class="card" data-category="b2b">
+          <div class="card-icon-wrap"><i class="fas fa-building"></i></div>
+          <div class="card-info">
+            <span class="card-label">B2B</span>
+            <span class="card-sub">Portal Empresarial</span>
+          </div>
+        </div>
+        <div class="card" data-category="b2c">
+          <div class="card-icon-wrap"><i class="fas fa-users"></i></div>
+          <div class="card-info">
+            <span class="card-label">B2C</span>
+            <span class="card-sub">Suporte ao Cliente</span>
+          </div>
+        </div>
+        <div class="card" data-category="materiais">
+          <div class="card-icon-wrap"><i class="fas fa-tools"></i></div>
+          <div class="card-info">
+            <span class="card-label">Materiais</span>
+            <span class="card-sub">Sistemas Internos</span>
+          </div>
+        </div>
+        <div class="card" data-category="rh">
+          <div class="card-icon-wrap"><i class="fas fa-id-badge"></i></div>
+          <div class="card-info">
+            <span class="card-label">RH Acessos</span>
+            <span class="card-sub">Recursos Humanos</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- ÁREA CENTRAL: LINKS + INFORMATIVO -->
+      <section class="central-section">
+
+        <!-- PAINEL DE LINKS -->
+        <div class="links-panel glass-panel">
+          <div class="panel-header">
+            <div class="panel-title-row">
+              <h2 id="links-title">Selecione uma categoria</h2>
+              <span class="links-badge"><span id="links-count">0</span> links</span>
+            </div>
+          </div>
+          <div class="links-grid" id="links-grid">
+            <div class="empty-state">
+              <i class="fas fa-hand-point-up"></i>
+              <p>Selecione uma categoria acima para visualizar os links.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL INFORMATIVO -->
+        <div class="info-panel glass-panel">
+          <div class="info-header">
+            <h3><i class="fas fa-bullhorn"></i> Informativos</h3>
+            <div class="info-nav">
+              <button id="prev-info" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+              <div class="info-dots">
+                <button class="info-dot active" data-info="1"></button>
+                <button class="info-dot" data-info="2"></button>
+                <button class="info-dot" data-info="3"></button>
+                <button class="info-dot" data-info="4"></button>
+              </div>
+              <button id="next-info" aria-label="Próximo"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+
+          <div class="info-body">
+            <div class="info-text active" id="info-text-1">
+              <h3><i class="fas fa-star"></i> Bem-vindo ao Portal</h3>
+              <p>Acesse rapidamente todos os sistemas e ferramentas da Diretoria Sul em um único lugar.</p>
+              <p>Selecione uma categoria nos cards acima para visualizar os links disponíveis.</p>
+            </div>
+            <div class="info-text" id="info-text-2">
+              <h3><i class="fas fa-bell"></i> Avisos Importantes</h3>
+              <p>Utilize o painel Admin para personalizar os informativos e adicionar novos links.</p>
+              <p>Acesso restrito com PIN de segurança.</p>
+            </div>
+            <div class="info-text" id="info-text-3">
+              <h3><i class="fas fa-tools"></i> Manutenção</h3>
+              <p>Em caso de links quebrados ou problemas técnicos, contate o suporte através do menu Contato.</p>
+            </div>
+            <div class="info-text" id="info-text-4">
+              <h3><i class="fas fa-phone-alt"></i> Suporte Técnico</h3>
+              <p>Plantão técnico disponível 24h. Telefone: (41) 99728-0210</p>
+              <p>E-mail: guilherme.graciano@telefonica.com</p>
+            </div>
+          </div>
+        </div>
+
+      </section>
+    </main>
+
+  </div><!-- /page-wrap -->
+
+  <!-- ═══════════════ PAINEL ADMIN ═══════════════ -->
+  <div id="admin-panel" class="admin-panel">
+    <div class="admin-inner">
+      <div class="admin-header">
+        <h2><i class="fas fa-cog"></i> Painel Administrativo</h2>
+        <button id="close-admin" class="close-btn" aria-label="Fechar"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="links">Links</button>
+        <button class="admin-tab" data-tab="info">Informativos</button>
+        <button class="admin-tab" data-tab="config">Configurações</button>
+      </div>
+
+      <!-- TAB: LINKS -->
+      <div class="admin-section active" id="admin-links">
+        <h3>Adicionar Link</h3>
+        <div class="form-group">
+          <label for="link-category">Categoria</label>
+          <select id="link-category">
+            <option value="b2b">B2B - Portal Empresarial</option>
+            <option value="b2c">B2C - Suporte ao Cliente</option>
+            <option value="materiais">Materiais - Sistemas Internos</option>
+            <option value="rh">RH Acessos - Recursos Humanos</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="link-name">Nome do Link *</label>
+          <input type="text" id="link-name" placeholder="Ex: Portal de Vendas" />
+        </div>
+        <div class="form-group">
+          <label for="link-url">URL *</label>
+          <input type="text" id="link-url" placeholder="https://..." />
+        </div>
+        <div class="form-group">
+          <label for="link-desc">Descrição</label>
+          <input type="text" id="link-desc" placeholder="Breve descrição do link" />
+        </div>
+        <button class="btn-primary" id="add-link-btn"><i class="fas fa-plus"></i> Adicionar Link</button>
+        <div id="admin-message" class="admin-message"></div>
+
+        <h3 class="mt-20">Links Cadastrados</h3>
+        <div id="admin-links-list" class="admin-links-list"></div>
+      </div>
+
+      <!-- TAB: INFORMATIVOS -->
+      <div class="admin-section" id="admin-info">
+        <h3>Editar Informativo</h3>
+        <div class="form-group">
+          <label for="info-select">Painel</label>
+          <select id="info-select">
+            <option value="1">Painel 1</option>
+            <option value="2">Painel 2</option>
+            <option value="3">Painel 3</option>
+            <option value="4">Painel 4</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="info-title">Título</label>
+          <input type="text" id="info-title" placeholder="Título do informativo" />
+        </div>
+        <div class="form-group">
+          <label for="info-content">Conteúdo</label>
+          <textarea id="info-content" rows="4" placeholder="Texto do informativo (use Enter para separar parágrafos)"></textarea>
+        </div>
+        <div class="form-group">
+          <label for="info-image">Imagem (opcional, máx 2MB)</label>
+          <input type="file" id="info-image" accept="image/*" />
+          <div id="image-preview-container" class="image-preview-container" style="display:none">
+            <img id="image-preview" src="#" alt="Preview" />
+            <button type="button" id="remove-image" class="remove-image-btn"><i class="fas fa-times"></i> Remover</button>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="btn-primary" id="save-info-btn"><i class="fas fa-save"></i> Salvar Informativo</button>
+          <button class="btn-secondary" id="reset-current-info" disabled><i class="fas fa-undo"></i> Restaurar Padrão</button>
+        </div>
+      </div>
+
+      <!-- TAB: CONFIGURAÇÕES -->
+      <div class="admin-section" id="admin-config">
+        <h3>Configurações do Sistema</h3>
+        <div class="config-box danger-zone">
+          <h4><i class="fas fa-exclamation-triangle"></i> Zona de Perigo</h4>
+          <p>Restaura todos os links, informativos e configurações de PIN para os valores padrão de fábrica.</p>
+          <button class="btn-danger" id="clear-storage"><i class="fas fa-trash-alt"></i> Restaurar Padrões de Fábrica</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <div class="admin-overlay" id="admin-overlay"></div>
+
+  <!-- ═══════════════ MODAL AUTENTICAÇÃO ═══════════════ -->
+  <div id="auth-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fas fa-lock"></i> Acesso Administrativo</h3>
+      </div>
+      <div class="modal-body">
+        <p>Digite o PIN de 4 dígitos para acessar o painel administrativo.</p>
+        <div class="form-group">
+          <label for="pin-input">PIN</label>
+          <input type="password" id="pin-input" maxlength="4" inputmode="numeric" placeholder="••••" autocomplete="off" />
+        </div>
+        <div id="auth-message" class="auth-message"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="auth-cancel">Cancelar</button>
+        <button class="btn-primary" id="auth-submit"><i class="fas fa-unlock"></i> Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MODAL CONFIRMAÇÃO ═══════════════ -->
+  <div id="confirm-modal" class="modal-backdrop">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3><i class="fas fa-question-circle"></i> Confirmar Ação</h3>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message"></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="modal-cancel">Cancelar</button>
+        <button class="btn-danger" id="modal-confirm">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ MODAL PÁGINA (Sobre/Contato) ═══════════════ -->
+  <div id="page-modal" class="modal-backdrop page-modal-backdrop">
+    <div class="modal-box page-modal-box">
+      <div class="modal-header">
+        <h3 id="page-title"></h3>
+        <button id="page-close" class="close-btn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="page-content"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ SCRIPTS ═══════════════ -->
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
