@@ -9,7 +9,12 @@
 
     async function init() {
         await storage.ensureDefaultLinks();
-        await storage.ensureDefaultPIN();
+
+        try{
+            await storage.ensureDefaultPIN();
+        } catch (error) {
+            console.error('Erro na inicialização do PIN:', error);
+        }
 
         setupCardEvents();
         setupInfoEvents();

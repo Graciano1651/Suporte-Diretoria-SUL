@@ -314,7 +314,7 @@
     // =========================
     async ensureDefaultPIN() {
         const { data, error } = await db
-            .from('app_settings')
+            .from('settings')
             .select('*')
             .eq('key', 'admin_pin_hash')
             .maybeSingle();
@@ -329,7 +329,7 @@
         const defaultHash = await this._secureHash(DEFAULT_PIN);
 
         const { error: upsertError } = await db
-            .from('app_settings')
+            .from('settings')
             .upsert({
                 key: 'admin_pin_hash',
                 value: defaultHash
@@ -347,7 +347,7 @@
         if (this._pinHash) return this._pinHash;
 
         const { data, error } = await db
-            .from('app_settings')
+            .from('settings')
             .select('*')
             .eq('key', 'admin_pin_hash')
             .maybeSingle();
@@ -372,7 +372,7 @@
         const hash = await this._secureHash(newPIN);
 
         const { error } = await db
-            .from('app_settings')
+            .from('settings')
             .upsert({
                 key: 'admin_pin_hash',
                 value: hash
@@ -401,7 +401,7 @@
     async clearAll() {
         const linksPromise = db.from('links').delete().neq('id', 0);
         const infoPromise = db.from('info_panels').delete().neq('panel_number', 0);
-        const settingsPromise = db.from('app_settings').delete().neq('key', '');
+        const settingsPromise = db.from('settings').delete().neq('key', '');
 
         const [linksRes, infoRes, settingsRes] = await Promise.all([
             linksPromise,
