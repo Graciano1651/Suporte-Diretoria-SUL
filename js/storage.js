@@ -1,18 +1,14 @@
-const STORAGE_KEYS = {
-    links: 'suporteLinks',
-    info: 'suporteInfo',
-    pin: 'suporteAdminPIN'
-};
-
-const DEFAULT_PIN = '1651';
-
-class StorageManager {
+ const DEFAULT_PIN = '1651';
+  class StorageManager {
     constructor() {
         this._links = null;
-        this._pinHash = null;
-        this._pinHashPromise = null;
+        this._info = null;
+         this._pinHash = null;
     }
 
+    // =========================
+    // HASH
+    // =========================
     _simpleHash(str) {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -36,197 +32,418 @@ class StorageManager {
         }
     }
 
-    getLinks() {
-        if (!this._links) {
-            this._links = this.loadLinksFromStorage();
-        }
-        return this._links;
+    deepClone(obj) {
+        return JSON.parse(JSON.stringify(obj));
     }
 
-    saveLinks(links) {
-        try {
-            localStorage.setItem(STORAGE_KEYS.links, JSON.stringify(links));
-            this._links = links;
-            return true;
-        } catch (error) {
-            console.error('Erro ao salvar links no localStorage:', error);
-            if (error && (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
-                throw new Error('Armazenamento cheio. Não foi possível salvar os links.');
-            }
-            throw new Error('Não foi possível salvar os links.');
+    // =========================
+    // LINKS
+    // =========================
+    async getLinks() {
+        if (this._links) return this._links;
+
+        const { data, error } = await db
+            .from('links')
+            .select('*')
+            .order('id', { ascending: true });
+
+        if (error) {
+            console.error('Erro ao buscar links do Supabase:', error);
+            throw new Error('Não foi possível carregar os links.');
         }
+
+        const grouped = {
+            b2b: [],
+            b2c: [],
+            materiais: [],
+            rh: []
+        };
+
+        (data || []).forEach(item => {
+            if (!grouped[item.category]) grouped[item.category] = [];
+            grouped[item.category].push({
+                id: item.id,
+                nome: item.nome || '',
+                url: item.url || '',
+                desc: item.descricao || ''
+            });
+        });
+
+        this._links = grouped;
+        return grouped;
     }
 
-    loadLinksFromStorage() {
-        const raw = localStorage.getItem(STORAGE_KEYS.links);
-        if (!raw) {
-            const clone = this.deepClone(initialLinksData);
-            this.saveLinks(clone);
-            return clone;
-        }
-        try {
-            const parsed = JSON.parse(raw);
-            return {
-                b2b: parsed.b2b || [],
-                b2c: parsed.b2c || [],
-                materiais: parsed.materiais || [],
-                rh: parsed.rh || []
-            };
-        } catch {
-            const clone = this.deepClone(initialLinksData);
-            this.saveLinks(clone);
-            return clone;
-        }
+    async saveLinks(links) {
+        this._links = links;
+        return true;
     }
 
-    addLink(category, link) {
-        const links = this.getLinks();
+    async ensureDefaultLinks() {
+        const { count, error } = await db
+            .from('links')
+            .select('*', { count: 'exact', head: true });
+
+        if (error) {
+            console.error('Erro ao verificar links padrão:', error);
+            throw new Error('Não foi possível verificar os links iniciais.');
+        }
+
+        if ((count || 0) > 0) return;
+
+        const rows = [];
+
+        Object.keys(initialLinksData).forEach(category => {
+            initialLinksData[category].forEach(link => {
+                rows.push({
+                    category,
+                    nome: link.nome,
+                    url: link.url,
+                    descricao: link.desc || ''
+                });
+            });
+        });
+
+        if (!rows.length) return;
+
+        const { error: insertError } = await db.from('links').insert(rows);
+
+        if (insertError) {
+            console.error('Erro ao inserir links padrão:', insertError);
+            throw new Error('Não foi possível criar os links padrão.');
+        }
+
+        this._links = null;
+    }
+
+    async addLink(category, link) {
+        const payload = {
+            category,
+            nome: link.nome || '',
+            url: link.url || '',
+            descricao: link.desc || ''
+        };
+
+        const { data, error } = await db
+            .from('links')
+            .insert(payload)
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Erro ao adicionar link:', error);
+            throw new Error('Não foi possível adicionar o link.');
+        }
+
+        const links = await this.getLinks();
+
         if (!links[category]) links[category] = [];
-        links[category].push(link);
-        this.saveLinks(links);
+        links[category].push({
+            id: data.id,
+            nome: data.nome,
+            url: data.url,
+            desc: data.descricao || ''
+        });
+
+        this._links = links;
         return links;
     }
 
-    deleteLink(category, index) {
-        const links = this.getLinks();
-        if (links[category] && links[category][index]) {
-            links[category].splice(index, 1);
-            this.saveLinks(links);
+    async deleteLink(category, index) {
+        const links = await this.getLinks();
+        const item = links?.[category]?.[index];
+
+        if (!item) return links;
+
+        const { error } = await db
+            .from('links')
+            .delete()
+            .eq('id', item.id);
+
+        if (error) {
+            console.error('Erro ao excluir link:', error);
+            throw new Error('Não foi possível excluir o link.');
         }
+
+        links[category].splice(index, 1);
+        this._links = links;
         return links;
     }
 
-    searchLinks(query) {
-        const links = this.getLinks();
+    async searchLinks(query) {
+        const links = await this.getLinks();
         const results = [];
         const q = String(query || '').toLowerCase().trim();
+
         Object.keys(links).forEach(category => {
             links[category].forEach(link => {
                 const name = String(link.nome || '').toLowerCase();
                 const desc = String(link.desc || '').toLowerCase();
+
                 if (name.includes(q) || desc.includes(q)) {
                     results.push({ ...link, category });
                 }
             });
         });
+
         return results;
     }
 
-    getInfo() {
-        const raw = localStorage.getItem(STORAGE_KEYS.info);
-        if (!raw) return {};
+    // =========================
+    // INFORMATIVOS
+    // =========================
+    async getInfo() {
+        if (this._info) return this._info;
+
+        const { data, error } = await db
+            .from('info_panels')
+            .select('*')
+            .order('panel_number', { ascending: true });
+
+        if (error) {
+            console.error('Erro ao buscar informativos:', error);
+            throw new Error('Não foi possível carregar os informativos.');
+        }
+
+        const info = {};
+
+        (data || []).forEach(item => {
+            info[item.panel_number] = {
+                title: item.title || '',
+                content: item.content || '',
+                imageData: item.image_data || null,
+                type: item.type || 'text'
+            };
+        });
+
+        this._info = info;
+        return info;
+    }
+
+    async saveInfo(info) {
         try {
-            const parsed = JSON.parse(raw) || {};
-            Object.keys(parsed).forEach((key) => {
-                if (typeof parsed[key] !== 'object' || parsed[key] === null) {
-                    parsed[key] = { title: '', content: '', imageData: null, type: 'text' };
+            const rows = Object.keys(info).map(key => ({
+                panel_number: Number(key),
+                title: info[key].title || '',
+                content: info[key].content || '',
+                image_data: info[key].imageData || null,
+                type: info[key].type || 'text'
+            }));
+
+            if (rows.length) {
+                const { error } = await db
+                    .from('info_panels')
+                    .upsert(rows, { onConflict: 'panel_number' });
+
+                if (error) {
+                    console.error('Erro ao salvar informativos:', error);
+                    throw new Error('Não foi possível salvar os informativos.');
                 }
-                if (!('type' in parsed[key])) parsed[key].type = 'text';
-                if (!('imageData' in parsed[key])) parsed[key].imageData = null;
-                if (!('title' in parsed[key])) parsed[key].title = '';
-                if (!('content' in parsed[key])) parsed[key].content = '';
-            });
-            return parsed;
-        } catch {
-            return {};
+            }
+
+            this._info = info;
+            return true;
+        } catch (error) {
+            console.error('Erro ao salvar informativos no Supabase:', error);
+            throw error instanceof Error
+                ? error
+                : new Error('Não foi possível salvar os informativos.');
         }
     }
 
-    saveInfo(info) {
-        try {
-            localStorage.setItem(STORAGE_KEYS.info, JSON.stringify(info));
-            return true;
-        } catch (error) {
-            console.error('Erro ao salvar informativos no localStorage:', error);
-            if (error && (error.name === 'QuotaExceededError' || error.name === 'NS_ERROR_DOM_QUOTA_REACHED')) {
-                throw new Error('Armazenamento cheio. Reduza o tamanho ou a quantidade de imagens.');
-            }
-            throw new Error('Não foi possível salvar os informativos.');
+    async deleteInfoPanel(panelNumber) {
+        const { error } = await db
+            .from('info_panels')
+            .delete()
+            .eq('panel_number', Number(panelNumber));
+
+        if (error) {
+            console.error('Erro ao restaurar painel:', error);
+            throw new Error('Não foi possível restaurar o painel.');
         }
+
+        if (this._info && this._info[panelNumber]) {
+            delete this._info[panelNumber];
+        }
+
+        return true;
     }
 
     imageToBase64(file) {
         return new Promise((resolve, reject) => {
             if (!file) return resolve(null);
+
             const reader = new FileReader();
+
             reader.onload = (event) => {
                 const img = new Image();
+
                 img.onload = () => {
                     const MAX_WIDTH = 1600;
                     let width = img.width;
                     let height = img.height;
+
                     if (width > MAX_WIDTH) {
                         height = height * (MAX_WIDTH / width);
                         width = MAX_WIDTH;
                     }
-                    const canvas = document.createElement("canvas");
+
+                    const canvas = document.createElement('canvas');
                     canvas.width = width;
                     canvas.height = height;
-                    const ctx = canvas.getContext("2d");
+
+                    const ctx = canvas.getContext('2d');
                     ctx.imageSmoothingEnabled = true;
-                    ctx.imageSmoothingQuality = "high";
+                    ctx.imageSmoothingQuality = 'high';
                     ctx.drawImage(img, 0, 0, width, height);
-                    const compressed = canvas.toDataURL("image/jpeg", 0.82);
+
+                    const compressed = canvas.toDataURL('image/jpeg', 0.82);
                     resolve(compressed);
                 };
+
                 img.onerror = reject;
                 img.src = event.target.result;
             };
+
             reader.onerror = reject;
             reader.readAsDataURL(file);
         });
     }
 
-    async getPINHash() {
-        if (!this._pinHash) {
-            const saved = localStorage.getItem(STORAGE_KEYS.pin);
-            if (saved) {
-                this._pinHash = saved;
-            } else {
-                const defaultHash = await this._secureHash(DEFAULT_PIN);
-                this._pinHash = defaultHash;
-                localStorage.setItem(STORAGE_KEYS.pin, defaultHash);
-            }
+    // =========================
+    // PIN
+    // =========================
+    async ensureDefaultPIN() {
+        const { data, error } = await db
+            .from('app_settings')
+            .select('*')
+            .eq('key', 'admin_pin_hash')
+            .maybeSingle();
+
+        if (error) {
+            console.error('Erro ao verificar PIN:', error);
+            throw new Error('Não foi possível verificar o PIN.');
         }
+
+        if (data) return;
+
+        const defaultHash = await this._secureHash(DEFAULT_PIN);
+
+        const { error: upsertError } = await db
+            .from('app_settings')
+            .upsert({
+                key: 'admin_pin_hash',
+                value: defaultHash
+            }, { onConflict: 'key' });
+
+        if (upsertError) {
+            console.error('Erro ao criar PIN padrão:', upsertError);
+            throw new Error('Não foi possível criar o PIN padrão.');
+        }
+
+        this._pinHash = defaultHash;
+    }
+
+    async getPINHash() {
+        if (this._pinHash) return this._pinHash;
+
+        const { data, error } = await db
+            .from('app_settings')
+            .select('*')
+            .eq('key', 'admin_pin_hash')
+            .maybeSingle();
+
+        if (error) {
+            console.error('Erro ao buscar PIN:', error);
+            throw new Error('Não foi possível validar o PIN.');
+        }
+
+        if (!data) {
+            await this.ensureDefaultPIN();
+            return this._pinHash;
+        }
+
+        this._pinHash = data.value;
         return this._pinHash;
     }
 
     async setPIN(newPIN) {
-        if (newPIN && newPIN.length >= 4) {
-            const hash = await this._secureHash(newPIN);
-            this._pinHash = hash;
-            localStorage.setItem(STORAGE_KEYS.pin, hash);
-            return true;
+        if (!newPIN || newPIN.length < 4) return false;
+
+        const hash = await this._secureHash(newPIN);
+
+        const { error } = await db
+            .from('app_settings')
+            .upsert({
+                key: 'admin_pin_hash',
+                value: hash
+            }, { onConflict: 'key' });
+
+        if (error) {
+            console.error('Erro ao salvar novo PIN:', error);
+            throw new Error('Não foi possível alterar o PIN.');
         }
-        return false;
+
+        this._pinHash = hash;
+        return true;
     }
 
     async validatePIN(input) {
         if (!input || input.length < 4) return false;
+
         const inputHash = await this._secureHash(input);
         const storedHash = await this.getPINHash();
         return inputHash === storedHash;
     }
 
-    clearAll() {
-        localStorage.removeItem(STORAGE_KEYS.links);
-        localStorage.removeItem(STORAGE_KEYS.info);
-        localStorage.removeItem(STORAGE_KEYS.pin);
+    // =========================
+    // RESET
+    // =========================
+    async clearAll() {
+        const linksPromise = db.from('links').delete().neq('id', 0);
+        const infoPromise = db.from('info_panels').delete().neq('panel_number', 0);
+        const settingsPromise = db.from('app_settings').delete().neq('key', '');
+
+        const [linksRes, infoRes, settingsRes] = await Promise.all([
+            linksPromise,
+            infoPromise,
+            settingsPromise
+        ]);
+
+        if (linksRes.error) {
+            console.error('Erro ao limpar links:', linksRes.error);
+            throw new Error('Erro ao limpar links.');
+        }
+
+        if (infoRes.error) {
+            console.error('Erro ao limpar informativos:', infoRes.error);
+            throw new Error('Erro ao limpar informativos.');
+        }
+
+        if (settingsRes.error) {
+            console.error('Erro ao limpar configurações:', settingsRes.error);
+            throw new Error('Erro ao limpar configurações.');
+        }
+
         this._links = null;
-        this._pinHash = null;
-        this._pinHashPromise = null;
-    }
-
-    resetToDefaults() {
-        this.clearAll();
-        const clone = this.deepClone(initialLinksData);
-        this.saveLinks(clone);
+        this._info = null;
         this._pinHash = null;
     }
 
+    async resetToDefaults() {
+        await this.clearAll();
+        await this.ensureDefaultLinks();
+        await this.ensureDefaultPIN();
+        this._links = null;
+        this._info = null;
+    }
+
+    // =========================
+    // URL
+    // =========================
     validateUrl(url) {
         const raw = String(url || '').trim();
         if (!raw) return false;
+
         try {
             const withHttps = raw.match(/^https?:\/\//i) ? raw : `https://${raw}`;
             const urlObj = new URL(withHttps);
@@ -239,6 +456,7 @@ class StorageManager {
     normalizeUrl(url) {
         const raw = String(url || '').trim();
         if (!raw) return null;
+
         try {
             const withProtocol = raw.match(/^https?:\/\//i) ? raw : `https://${raw}`;
             const urlObj = new URL(withProtocol);
@@ -248,11 +466,7 @@ class StorageManager {
             return null;
         }
     }
-
-    deepClone(obj) {
-        return JSON.parse(JSON.stringify(obj));
-    }
-}
+ }
 
 const initialLinksData = {
     b2b: [
@@ -281,4 +495,4 @@ const initialLinksData = {
     ]
 };
 
-const storage = new StorageManager();
+ const storage = new StorageManager();
